@@ -59,3 +59,7 @@ Each time the ball crosses a paddle, the other player gets a point. The ball is 
 ## Credits
 
 - Developed with the guidance of **Guillerme Lima** at **Alura**
+
+https://github.com/user-attachments/assets/f66b9344-335a-4c50-8e4a-5b24ecc29064
+
+
