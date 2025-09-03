@@ -3,35 +3,31 @@
  **Name: Priscila Fry
  **Date: 09/17/2024************************************************/
 
-let xBola = 300; //sets the starting position of the ball X
-let yBola = 200; //sets the starting position of the ball Y
+let xBola = 300;
+let yBola = 200;
 let diameterBola = 13;
 let raio = diameterBola / 2;
-//below sets the velocity of the ball
 let velocityXBola = 6;
 let velocityYBola = 6;
 let raqueteWidth = 10;
 let raqueteHeight = 50;
 
-//variables of my raquete
-let xMraquete = 5; //place the raquete on the left side of the board
-let yMraquete = 150; //places the raquete on the middle of the board
+let xMraquete = 5;
+let yMraquete = 150;
 
-//Oponent raquete variables
-let xOraquete = 585; // place raquete on the right side of board
-let yOraquete = 150; //places the raquete on the middle of the board
+let xOraquete = 585;
+let yOraquete = 150;
 let velocidadeYOraquete;
 
-let collide = false;
-
-//Placar do jogo
 let meusPontos = 0;
 let pontosOponente = 0;
 
-//Sons for the game
-let raquetada;
-let ponto;
-let trilha;
+let raquetada, ponto, trilha;
+
+let gameRunning = false;
+let musicOn = true;
+
+let startBtn, stopBtn, musicBtn;
 
 function preload() {
   trilha = loadSound("trilha.mp3");
@@ -39,20 +35,12 @@ function preload() {
   raquetada = loadSound("raquetada.mp3");
 }
 
-let startBtn, stopBtn, musicBtn;
-let gameRunning = false;
-let musicOn = true;
-
-let startBtn, stopBtn, musicBtn;
-let gameRunning = false;
-let musicOn = true;
-
 function setup() {
   createCanvas(600, 400);
 
   // Create Start button
   startBtn = createButton('Start Game');
-  startBtn.position(10, height + 10); // below canvas
+  startBtn.position(10, height + 10);
   startBtn.mousePressed(() => {
     gameRunning = true;
     if (musicOn) trilha.loop();
@@ -63,10 +51,10 @@ function setup() {
   stopBtn.position(120, height + 10);
   stopBtn.mousePressed(() => {
     gameRunning = false;
-    if (musicOn) trilha.stop();
+    trilha.stop();
   });
 
-  // Create Music toggle button
+  // Create Music Toggle button
   musicBtn = createButton('Toggle Music');
   musicBtn.position(230, height + 10);
   musicBtn.mousePressed(() => {
@@ -79,37 +67,37 @@ function setup() {
   });
 }
 
-
 function draw() {
-  if (!gameRunning) return; // Skip draw if game is stopped
-  
-  background(0); // sets the black color for the background
-  mostraBola(); // call the function to create the ball
+  background(0);
 
-  moveBola(); //call the function to move the ball
+  if (!gameRunning) return; // stop drawing the game if not running
 
-  verifyColisionBoard(); //calls the function to check collision
-  mostraRaquete(xMraquete, yMraquete); // call to create minha raquete
-  mostraRaquete(xOraquete, yOraquete); // call to create raquete oponent
-  moveRaquete(); // call Function to make the raquete move
-  //verifyColisionRaquete(); // call function to create collision in between the ball and the raquete
+  mostraBola();
+  moveBola();
+  verifyColisionBoard();
+
+  mostraRaquete(xMraquete, yMraquete);
+  mostraRaquete(xOraquete, yOraquete);
+
+  moveRaquete();
   colisaoRaqueteBiblioteca(xMraquete, yMraquete);
   colisaoRaqueteBiblioteca(xOraquete, yOraquete);
-  moveRaqueteOponente();
 
+  moveRaqueteOponente();
   checkScore();
   marcaPonto();
 }
 
 function mostraBola() {
-  circle(xBola, yBola, diameterBola); // creates the ball
+  circle(xBola, yBola, diameterBola);
 }
+
 function moveBola() {
-  xBola = xBola + velocityXBola; // creates moviments
-  yBola = yBola + velocityYBola; // creates moviments
+  xBola += velocityXBola;
+  yBola += velocityYBola;
 }
+
 function verifyColisionBoard() {
-  //Verifying if there is a collision  with th board of the ball with the black box X and Y
   if (xBola + raio > width || xBola - raio < 0) {
     velocityXBola *= -1;
   }
@@ -119,42 +107,17 @@ function verifyColisionBoard() {
 }
 
 function mostraRaquete(x, y) {
-  rect(x, y, raqueteWidth, raqueteHeight); // creando a raquete ************************
+  rect(x, y, raqueteWidth, raqueteHeight);
 }
 
 function moveRaquete() {
-  if (keyIsDown(UP_ARROW)) {
-    yMraquete -= 10;
-  }
-  if (keyIsDown(DOWN_ARROW)) {
-    yMraquete += 10;
-  }
-  if (yMraquete < 0) {
-    yMraquete = 0;
-  } else if (yMraquete > height - raqueteHeight) {
-    yMraquete = height - raqueteHeight;
-  }
+  if (keyIsDown(UP_ARROW)) yMraquete -= 10;
+  if (keyIsDown(DOWN_ARROW)) yMraquete += 10;
+  yMraquete = constrain(yMraquete, 0, height - raqueteHeight);
 }
-function verifyColisionRaquete() {
-  if (
-    xBola - raio < xMraquete + mRaqueteWidth &&
-    yBola - raio < yMraquete + mRaqueteHeight &&
-    yBola + raio > yMraquete
-  ) {
-    velocityXBola *= -1;
-    raquetada.play();
-  }
-}
+
 function colisaoRaqueteBiblioteca(x, y) {
-  collide = collideRectCircle(
-    x,
-    y,
-    raqueteWidth,
-    raqueteHeight,
-    xBola,
-    yBola,
-    raio
-  );
+  let collide = collideRectCircle(x, y, raqueteWidth, raqueteHeight, xBola, yBola, raio);
   if (collide) {
     velocityXBola *= -1;
     raquetada.play();
@@ -162,55 +125,33 @@ function colisaoRaqueteBiblioteca(x, y) {
 }
 
 function moveRaqueteOponente() {
-  // Faz a raquete do oponente se mover para cima e para baixo seguindo a bolinha
   velocidadeYOraquete = (yBola - yOraquete - raqueteWidth / 2 - 50) / 4;
   yOraquete += velocidadeYOraquete;
-
-  // Mantém a raquete dentro dos limites da tela
-  if (yOraquete < 0) {
-    yOraquete = 0;
-  } else if (yOraquete > height - raqueteHeight) {
-    yOraquete = height - raqueteHeight;
-  }
-} //this function above  is to play against computer
-
-//This function bellow is to play against another player
-//87 represents up letter w and 83 represents down  leter s in the key board
-/*function moveRaqueteOponente(){
-  if(keyIsDown(87)){
-    yMraquete -=10;
-  }
-  if(keyIsDown(83)){
-    yMraquete += 10;
-  }
-  if (yMraquete < 0) {
-    yMraquete = 0;
-  } else if (yMraquete > height - raqueteHeight) {
-    yMraquete = height- raqueteHeight;
-  }
-}*/
-
-
+  yOraquete = constrain(yOraquete, 0, height - raqueteHeight);
+}
 
 function checkScore() {
   stroke(255);
   textAlign(CENTER);
   textSize(16);
-  fill(color(255, 140, 0));
-  rect(150, 10, 40, 20); //creating a orange box for the scores
-  fill(255); // cor do score
-  text(meusPontos, 170, 26); //
-  fill(color(255, 140, 0));
-  rect(450, 10, 40, 20); //creating a orange box for the scores
-  fill(255); // cor do score
+
+  fill(255, 140, 0);
+  rect(150, 10, 40, 20);
+  fill(255);
+  text(meusPontos, 170, 26);
+
+  fill(255, 140, 0);
+  rect(450, 10, 40, 20);
+  fill(255);
   text(pontosOponente, 470, 26);
 }
+
 function marcaPonto() {
-  if (xBola > 588) {
+  if (xBola > width - 12) {
     meusPontos += 1;
     ponto.play();
   }
-  if (xBola < 9) {
+  if (xBola < 12) {
     pontosOponente += 1;
     ponto.play();
   }
