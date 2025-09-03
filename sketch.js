@@ -31,21 +31,21 @@ function setup() {
 
   // Buttons under canvas
   startBtn = createButton('Start Game');
-  startBtn.position(10, height + 20);
+  startBtn.parent('controls');       // Attach to your div
   startBtn.mousePressed(() => {
     gameRunning = true;
     if (musicOn && !trilha.isPlaying()) trilha.loop();
   });
 
   stopBtn = createButton('Stop Game');
-  stopBtn.position(120, height + 20);
+  stopBtn.parent('controls');        // Attach to your div
   stopBtn.mousePressed(() => {
     gameRunning = false;
     trilha.stop();
   });
 
   musicBtn = createButton('Toggle Music');
-  musicBtn.position(230, height + 20);
+  musicBtn.parent('controls');       // Attach to your div
   musicBtn.mousePressed(() => {
     musicOn = !musicOn;
     if (musicOn && gameRunning) trilha.loop();
