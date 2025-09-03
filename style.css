@@ -6,22 +6,23 @@ canvas {
   display: block;
 }
 
-#controls {
-  margin-top: 10px;
+#pingpong-controls {
   text-align: center;
+  margin-top: 10px;
+  z-index: 10;
 }
 
-#controls button {
-  margin: 0 5px;
-  padding: 8px 12px;
+#pingpong-controls button {
+  padding: 8px 15px;
+  margin: 5px;
   font-size: 16px;
-  background-color: orange;
-  border: none;
-  color: white;
   cursor: pointer;
   border-radius: 5px;
+  border: none;
+  background-color: #0072ff;
+  color: white;
 }
 
-#controls button:hover {
-  background-color: darkorange;
+#pingpong-controls button:hover {
+  background-color: #00c6ff;
 }
