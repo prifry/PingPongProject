@@ -40,7 +40,7 @@ function setup() {
 
   // Create Start button
   startBtn = createButton('Start Game');
-  startBtn.position(10, height + 10);
+  startBtn.position(10, 420);
   startBtn.mousePressed(() => {
     gameRunning = true;
     if (musicOn) trilha.loop();
@@ -48,7 +48,7 @@ function setup() {
 
   // Create Stop button
   stopBtn = createButton('Stop Game');
-  stopBtn.position(120, height + 10);
+  stopBtn.position(120, 420);
   stopBtn.mousePressed(() => {
     gameRunning = false;
     trilha.stop();
@@ -56,7 +56,7 @@ function setup() {
 
   // Create Music Toggle button
   musicBtn = createButton('Toggle Music');
-  musicBtn.position(230, height + 10);
+  musicBtn.position(230,420);
   musicBtn.mousePressed(() => {
     musicOn = !musicOn;
     if (musicOn && gameRunning) {
