@@ -5,3 +5,14 @@ html, body {
 canvas {
   display: block;
 }
+
+#controls {
+  text-align: center;
+  margin: 20px 0;
+}
+#controls button {
+  padding: 10px 15px;
+  margin: 0 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
