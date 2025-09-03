@@ -7,12 +7,21 @@ canvas {
 }
 
 #controls {
+  margin-top: 10px;
   text-align: center;
-  margin: 20px 0;
 }
+
 #controls button {
-  padding: 10px 15px;
   margin: 0 5px;
+  padding: 8px 12px;
   font-size: 16px;
+  background-color: orange;
+  border: none;
+  color: white;
   cursor: pointer;
+  border-radius: 5px;
+}
+
+#controls button:hover {
+  background-color: darkorange;
 }
