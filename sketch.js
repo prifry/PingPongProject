@@ -3,30 +3,21 @@
  **Name: Priscila Fry
  **Date: 09/17/2024************************************************/
 
-let xBola = 300;
-let yBola = 200;
+let xBola = 300, yBola = 200;
 let diameterBola = 13;
 let raio = diameterBola / 2;
-let velocityXBola = 6;
-let velocityYBola = 6;
-let raqueteWidth = 10;
-let raqueteHeight = 50;
+let velocityXBola = 6, velocityYBola = 6;
 
-let xMraquete = 5;
-let yMraquete = 150;
-
-let xOraquete = 585;
-let yOraquete = 150;
+let raqueteWidth = 10, raqueteHeight = 50;
+let xMraquete = 5, yMraquete = 150;
+let xOraquete = 585, yOraquete = 150;
 let velocidadeYOraquete;
 
-let meusPontos = 0;
-let pontosOponente = 0;
-
-let raquetada, ponto, trilha;
-
+let meusPontos = 0, pontosOponente = 0;
 let gameRunning = false;
 let musicOn = true;
 
+let raquetada, ponto, trilha;
 let startBtn, stopBtn, musicBtn;
 
 function preload() {
@@ -38,56 +29,54 @@ function preload() {
 function setup() {
   createCanvas(600, 400);
 
-  // Create Start button
+  // Buttons under canvas
   startBtn = createButton('Start Game');
-  startBtn.position(10, 420);
+  startBtn.position(10, height + 20);
   startBtn.mousePressed(() => {
     gameRunning = true;
-    if (musicOn) trilha.loop();
+    if (musicOn && !trilha.isPlaying()) trilha.loop();
   });
 
-  // Create Stop button
   stopBtn = createButton('Stop Game');
-  stopBtn.position(120, 420);
+  stopBtn.position(120, height + 20);
   stopBtn.mousePressed(() => {
     gameRunning = false;
     trilha.stop();
   });
 
-  // Create Music Toggle button
   musicBtn = createButton('Toggle Music');
-  musicBtn.position(230,420);
+  musicBtn.position(230, height + 20);
   musicBtn.mousePressed(() => {
     musicOn = !musicOn;
-    if (musicOn && gameRunning) {
-      trilha.loop();
-    } else {
-      trilha.stop();
-    }
+    if (musicOn && gameRunning) trilha.loop();
+    else trilha.stop();
   });
+
+  textSize(16);
+  textAlign(CENTER);
 }
 
 function draw() {
   background(0);
 
-  if (!gameRunning) return; // stop drawing the game if not running
-
   mostraBola();
-  moveBola();
-  verifyColisionBoard();
+  if (gameRunning) {
+    moveBola();
+    verifyColisionBoard();
+    moveRaquete();
+    moveRaqueteOponente();
+    colisaoRaqueteBiblioteca(xMraquete, yMraquete);
+    colisaoRaqueteBiblioteca(xOraquete, yOraquete);
+    checkScore();
+    marcaPonto();
+  }
 
   mostraRaquete(xMraquete, yMraquete);
   mostraRaquete(xOraquete, yOraquete);
-
-  moveRaquete();
-  colisaoRaqueteBiblioteca(xMraquete, yMraquete);
-  colisaoRaqueteBiblioteca(xOraquete, yOraquete);
-
-  moveRaqueteOponente();
-  checkScore();
-  marcaPonto();
+  drawScore();
 }
 
+// --- Ball functions ---
 function mostraBola() {
   circle(xBola, yBola, diameterBola);
 }
@@ -98,14 +87,11 @@ function moveBola() {
 }
 
 function verifyColisionBoard() {
-  if (xBola + raio > width || xBola - raio < 0) {
-    velocityXBola *= -1;
-  }
-  if (yBola + raio > height || yBola - raio < 0) {
-    velocityYBola *= -1;
-  }
+  if (xBola + raio > width || xBola - raio < 0) velocityXBola *= -1;
+  if (yBola + raio > height || yBola - raio < 0) velocityYBola *= -1;
 }
 
+// --- Paddle functions ---
 function mostraRaquete(x, y) {
   rect(x, y, raqueteWidth, raqueteHeight);
 }
@@ -113,7 +99,14 @@ function mostraRaquete(x, y) {
 function moveRaquete() {
   if (keyIsDown(UP_ARROW)) yMraquete -= 10;
   if (keyIsDown(DOWN_ARROW)) yMraquete += 10;
+
   yMraquete = constrain(yMraquete, 0, height - raqueteHeight);
+}
+
+function moveRaqueteOponente() {
+  velocidadeYOraquete = (yBola - yOraquete - raqueteWidth / 2 - 50) / 4;
+  yOraquete += velocidadeYOraquete;
+  yOraquete = constrain(yOraquete, 0, height - raqueteHeight);
 }
 
 function colisaoRaqueteBiblioteca(x, y) {
@@ -124,35 +117,37 @@ function colisaoRaqueteBiblioteca(x, y) {
   }
 }
 
-function moveRaqueteOponente() {
-  velocidadeYOraquete = (yBola - yOraquete - raqueteWidth / 2 - 50) / 4;
-  yOraquete += velocidadeYOraquete;
-  yOraquete = constrain(yOraquete, 0, height - raqueteHeight);
+// --- Score functions ---
+function checkScore() {
+  fill(255);
+  drawScore();
 }
 
-function checkScore() {
-  stroke(255);
-  textAlign(CENTER);
-  textSize(16);
-
-  fill(255, 140, 0);
+function drawScore() {
+  fill(color(255, 140, 0));
   rect(150, 10, 40, 20);
-  fill(255);
-  text(meusPontos, 170, 26);
-
-  fill(255, 140, 0);
   rect(450, 10, 40, 20);
   fill(255);
+  text(meusPontos, 170, 26);
   text(pontosOponente, 470, 26);
 }
 
 function marcaPonto() {
-  if (xBola > width - 12) {
-    meusPontos += 1;
+  if (xBola > 588) {
+    meusPontos++;
     ponto.play();
+    resetBall();
   }
-  if (xBola < 12) {
-    pontosOponente += 1;
+  if (xBola < 9) {
+    pontosOponente++;
     ponto.play();
+    resetBall();
   }
+}
+
+function resetBall() {
+  xBola = width / 2;
+  yBola = height / 2;
+  velocityXBola *= -1;
+  velocityYBola = 6;
 }
