@@ -58,7 +58,7 @@ function setup() {
 
 function draw() {
   background(0);
-
+   if (!gameRunning) return; // stop updating/drawing if game is paused
   mostraBola();
   if (gameRunning) {
     moveBola();
@@ -151,3 +151,19 @@ function resetBall() {
   velocityXBola *= -1;
   velocityYBola = 6;
 }
+
+let gameRunning = false;
+
+document.getElementById('start-game').addEventListener('click', () => {
+  gameRunning = true;
+  if (!trilha.isPlaying()) trilha.loop();
+});
+
+document.getElementById('end-game').addEventListener('click', () => {
+  gameRunning = false;
+});
+
+document.getElementById('toggle-music').addEventListener('click', () => {
+  if (trilha.isPlaying()) trilha.stop();
+  else trilha.loop();
+});
