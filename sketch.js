@@ -39,38 +39,46 @@ function preload() {
   raquetada = loadSound("raquetada.mp3");
 }
 
+let startBtn, stopBtn, musicBtn;
+let gameRunning = false;
+let musicOn = true;
+
+let startBtn, stopBtn, musicBtn;
 let gameRunning = false;
 let musicOn = true;
 
 function setup() {
-  createCanvas(600, 400); // creates the black box for the game
+  createCanvas(600, 400);
 
-  // Only loop the music if musicOn is true
-  if (musicOn) trilha.loop();
-
-  // Button events
-  document.getElementById("startBtn").addEventListener("click", () => {
+  // Create Start button
+  startBtn = createButton('Start Game');
+  startBtn.position(10, height + 10); // below canvas
+  startBtn.mousePressed(() => {
     gameRunning = true;
-    loop(); // Start draw loop
-    if (musicOn && !trilha.isPlaying()) trilha.loop();
+    if (musicOn) trilha.loop();
   });
 
-  document.getElementById("stopBtn").addEventListener("click", () => {
+  // Create Stop button
+  stopBtn = createButton('Stop Game');
+  stopBtn.position(120, height + 10);
+  stopBtn.mousePressed(() => {
     gameRunning = false;
-    noLoop(); // Stop draw loop
+    if (musicOn) trilha.stop();
   });
 
-  document.getElementById("musicBtn").addEventListener("click", () => {
+  // Create Music toggle button
+  musicBtn = createButton('Toggle Music');
+  musicBtn.position(230, height + 10);
+  musicBtn.mousePressed(() => {
     musicOn = !musicOn;
-    if (musicOn) {
+    if (musicOn && gameRunning) {
       trilha.loop();
     } else {
       trilha.stop();
     }
   });
-
-  noLoop(); // Start stopped until user clicks Start
 }
+
 
 function draw() {
   if (!gameRunning) return; // Skip draw if game is stopped
