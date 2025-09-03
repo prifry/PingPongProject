@@ -39,13 +39,42 @@ function preload() {
   raquetada = loadSound("raquetada.mp3");
 }
 
+let gameRunning = false;
+let musicOn = true;
+
 function setup() {
   createCanvas(600, 400); // creates the black box for the game
 
-  trilha.loop();
+  // Only loop the music if musicOn is true
+  if (musicOn) trilha.loop();
+
+  // Button events
+  document.getElementById("startBtn").addEventListener("click", () => {
+    gameRunning = true;
+    loop(); // Start draw loop
+    if (musicOn && !trilha.isPlaying()) trilha.loop();
+  });
+
+  document.getElementById("stopBtn").addEventListener("click", () => {
+    gameRunning = false;
+    noLoop(); // Stop draw loop
+  });
+
+  document.getElementById("musicBtn").addEventListener("click", () => {
+    musicOn = !musicOn;
+    if (musicOn) {
+      trilha.loop();
+    } else {
+      trilha.stop();
+    }
+  });
+
+  noLoop(); // Start stopped until user clicks Start
 }
 
 function draw() {
+  if (!gameRunning) return; // Skip draw if game is stopped
+  
   background(0); // sets the black color for the background
   mostraBola(); // call the function to create the ball
 
