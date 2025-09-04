@@ -52,7 +52,16 @@ function setup() {
 function draw() {
   background(0);
 
-  if (!gameRunning) return;
+  f (gameRunning) {
+    fill(255);
+    ellipse(width/2, height/2, 50, 50); // simple placeholder ball
+  } else {
+    fill(255);
+    textSize(24);
+    textAlign(CENTER, CENTER);
+    text("Game Paused - Click Start", width/2, height/2);
+  }
+}
 
   mostraBola();
   moveBola();
