@@ -4,5 +4,7 @@ html, body {
 }
 canvas {
   display: block;
+   position: relative; /* <-- new */
+  z-index: 0;         /* <-- new */
 }
 
